@@ -1,11 +1,11 @@
 module RakeMKV
   class Title
 
-    attr_accessor :num, :cells
+    attr_accessor :id, :cells
     attr_reader :time
 
     def initialize(id, time, cells, code=nil)
-      @num = id.to_i
+      @id = id.to_i
       @time =  convert_to_sec(time)
       @cells = cells.to_i
       @code = code

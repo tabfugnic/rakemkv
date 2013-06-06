@@ -34,8 +34,8 @@ module RakeMKV
     #
     def transcode!(destination, sel_title=nil, time=1200)
       titles.each do |title|
-        break if sel_title && sel_title != title.num
-        `#{mkvcon} mkv #{path} #{title.num} #{check(destination)}` if title.time > time
+        break if sel_title && sel_title != title.id
+        `#{mkvcon} mkv #{path} #{title.id} #{check(destination)}` if title.time > time
       end
     end
 

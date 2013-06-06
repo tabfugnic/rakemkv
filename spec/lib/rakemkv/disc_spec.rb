@@ -36,7 +36,7 @@ describe RakeMKV::Disc do
     subject { RakeMKV::Disc.new("disc:0") }
     it "finds all titles amongst returned content" do
       subject.stub(:info) { RakeMKVMock.info }
-      subject.titles.first.num.should eq(1)
+      subject.titles.first.id.should eq(1)
     end
     it "caches titles when called once" do
       subject.should_receive(:info).once.and_return(RakeMKVMock.info)
