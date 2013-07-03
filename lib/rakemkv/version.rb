@@ -1,3 +1,3 @@
-module Rakemkv
+module RakeMKV
   VERSION = "0.0.9"
 end

@@ -85,7 +85,7 @@ module RakeMKV
       when /disc:/
         location
       else
-        raise TypeError
+        raise RuntimeError
       end
     end
   end
