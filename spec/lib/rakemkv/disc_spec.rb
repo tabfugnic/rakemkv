@@ -48,28 +48,28 @@ describe RakeMKV::Disc do
     subject { RakeMKV::Disc.new("disc:0") }
     before { File.stub(:directory?).and_return true }
     it "errors when destination doesn't exist" do
-      subject.stub!(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12) ]
+      subject.stub(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12) ]
       File.stub(:directory?).and_return false
       expect { subject.transcode!("/path/to/heart/") }.to raise_error
     end
     it "accepts destination" do
-      subject.stub!(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12) ]
+      subject.stub(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12) ]
       subject.should_receive(:"`").with("makemkvcon -r mkv disc:0 1 /path/to/heart/")
       subject.transcode!("/path/to/heart/")
     end
     it "converts all relevant titles" do
-      subject.stub!(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12), RakeMKV::Title.new(2, 1222, 12)]
+      subject.stub(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12), RakeMKV::Title.new(2, 1222, 12)]
       subject.should_receive(:"`").with("makemkvcon -r mkv disc:0 1 /path/to/heart/")
       subject.should_receive(:"`").with("makemkvcon -r mkv disc:0 2 /path/to/heart/")
       subject.transcode!("/path/to/heart/")
       end
     it "converts titles based on time" do
-      subject.stub!(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12), RakeMKV::Title.new(2, 222, 12) ]
+      subject.stub(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12), RakeMKV::Title.new(2, 222, 12) ]
       subject.should_receive(:"`").with("makemkvcon -r mkv disc:0 1 /path/to/heart/")
       subject.transcode!("/path/to/heart/")
     end
     it "converts only a specific title" do
-      subject.stub!(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12), RakeMKV::Title.new(2, 1222, 12)]
+      subject.stub(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12), RakeMKV::Title.new(2, 1222, 12)]
       subject.should_receive(:"`").with("makemkvcon -r mkv disc:0 1 /path/to/heart/")
       subject.transcode!("/path/to/heart/", 1)
     end
