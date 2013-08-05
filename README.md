@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tabfugnic/rakemkv.png)](https://travis-ci.org/tabfugnic/rakemkv)
+
 # Rakemkv
 
 A fully object oriented wrapper around MakeMKV to help facilitate more
