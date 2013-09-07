@@ -39,8 +39,32 @@ describe RakeMKV::Disc do
       subject.titles.first.id.should eq(1)
     end
     it "caches titles when called once" do
-      subject.should_receive(:info).once.and_return(RakeMKVMock.info)
+      expect(subject).to receive(:info).once.and_return(RakeMKVMock.info)
       2.times { subject.titles }
+    end
+  end
+
+  describe "#format" do
+    subject { RakeMKV::Disc.new("disc:0") }
+    it "finds the disc format" do
+      subject.stub(:info) { RakeMKVMock.info }
+      expect(subject.format).to eq "DVD"
+    end
+    it "caches the disc format when called" do
+      expect(subject).to receive(:info).once.and_return(RakeMKVMock.info)
+      2.times { subject.format }
+    end
+  end
+
+  describe "#destination" do
+    subject { RakeMKV::Disc.new("disc:0") }
+    it "finds the disc format" do
+      subject.stub(:info) { RakeMKVMock.info }
+      expect(subject.format).to eq "DVD"
+    end
+    it "caches the disc format when called" do
+      expect(subject).to receive(:info).once.and_return(RakeMKVMock.info)
+      2.times { subject.format }
     end
   end
 

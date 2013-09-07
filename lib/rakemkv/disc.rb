@@ -4,7 +4,7 @@ module RakeMKV
   #
   class Disc
     attr_reader :path
-    attr_writer :titles
+    attr_writer :titles, :format
     attr_accessor :destination
 
     ##
@@ -19,7 +19,7 @@ module RakeMKV
     #  Find available drives and content
     #
     def self.drives
-      `makemkvcon -r info disc:9999`
+      `#{mkvcon} info disc:9999`
     end
 
     ##
@@ -37,6 +37,17 @@ module RakeMKV
         break if sel_title && sel_title != title.id
         `#{mkvcon} mkv #{path} #{title.id} #{check(destination)}` if title.time > time
       end
+    end
+
+    ##
+    #  get disc type information
+    #
+    def format
+      return @format if @format
+      cleanup(info).each do |line|
+        @format = line[2].sub(" disc", "") if line[0] == "CINFO:1"
+      end
+      return @format
     end
 
     ##
@@ -59,8 +70,12 @@ module RakeMKV
 
     private
 
-    def mkvcon
+    def self.mkvcon
       return "makemkvcon -r" # Always robot mode all the time.
+    end
+
+    def mkvcon
+      return Disc.mkvcon
     end
 
     def cleanup(info) # Better way to do this?  Maybe
