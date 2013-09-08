@@ -56,6 +56,15 @@ describe RakeMKV::Disc do
     end
   end
 
+  describe "#longest" do
+    subject { RakeMKV::Disc.new("disc:0") }
+    let(:title) { double(RakeMKV::Title, time: 50) }
+    it "finds the longest time" do
+      subject.stub(:titles) { [ double(RakeMKV::Title, time: 20), title] }
+      expect(subject.longest).to eq title
+    end
+  end
+
   describe "#destination" do
     subject { RakeMKV::Disc.new("disc:0") }
     it "finds the disc format" do

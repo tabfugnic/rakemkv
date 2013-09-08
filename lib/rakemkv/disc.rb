@@ -62,6 +62,13 @@ module RakeMKV
     end
 
     ##
+    #  Get longest title
+    #
+    def longest
+      titles.max { |a,b| a.time <=> b.time }
+    end
+
+    ##
     #  Get title information on disc
     #
     def titles
