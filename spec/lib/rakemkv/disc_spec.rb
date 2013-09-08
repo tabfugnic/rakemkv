@@ -3,7 +3,7 @@ require 'spec_helper'
 describe RakeMKV::Disc do
   context "instantiate path" do
     it "accepts the device path" do
-      RakeMKV::Disc.new("/dev/sd0").path.should eq "dev:sd0"
+      RakeMKV::Disc.new("/dev/sd0").path.should eq "dev:/dev/sd0"
     end
     it "accepts the file iso path" do
       RakeMKV::Disc.new("path_to.iso").path.should eq "iso:path_to.iso"

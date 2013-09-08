@@ -112,7 +112,7 @@ module RakeMKV
     def determine_path(location)
       case location
       when /dev/
-        "dev:#{location.gsub('/dev/', '')}"
+        "dev:#{location}"
       when /iso/
         "iso:#{location}"
       when /disc:/
