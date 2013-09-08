@@ -94,10 +94,23 @@ describe RakeMKV::Disc do
     end
     it "converts only a specific title" do
       subject.stub(:titles).and_return [ RakeMKV::Title.new(1, 1222, 12), RakeMKV::Title.new(2, 1222, 12)]
-      subject.should_receive(:"`").with("makemkvcon -r mkv disc:0 1 /path/to/heart/")
-      subject.transcode!("/path/to/heart/", 1)
+      subject.should_receive(:"`").with("makemkvcon -r mkv disc:0 2 /path/to/heart/")
+      subject.transcode!("/path/to/heart/", 2)
     end
   end
+
+  describe "#name" do
+    subject { RakeMKV::Disc.new("disc:0") }
+    it "grabs the name of the disc" do
+      subject.stub(:info) { RakeMKVMock.info }
+      expect(subject.name).to eq "DIME_NTSC"
+    end
+    it "only calls this once" do
+      expect(subject).to receive(:info).once.and_return( RakeMKVMock.info )
+      2.times { subject.name }
+    end
+  end
+
   describe "#short?" do
     subject { RakeMKV::Disc.new("disc:0") }
     it "returns true for short shows" do

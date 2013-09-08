@@ -5,7 +5,6 @@ module RakeMKV
   class Disc
     attr_reader :path
     attr_writer :titles, :format
-    attr_accessor :destination
 
     ##
     #  Initialize disc
@@ -33,9 +32,10 @@ module RakeMKV
     #  Transcode information on disc
     #
     def transcode!(destination, sel_title=nil, time=1200)
+      destination = check(destination)
       titles.each do |title|
-        break if sel_title && sel_title != title.id
-        `#{mkvcon} mkv #{path} #{title.id} #{check(destination)}` if title.time > time
+        next if sel_title && sel_title != title.id
+        something = `#{mkvcon} mkv #{path} #{title.id} #{destination}` if title.time > time
       end
     end
 
@@ -48,6 +48,17 @@ module RakeMKV
         @format = line[2].sub(" disc", "") if line[0] == "CINFO:1"
       end
       return @format
+    end
+
+    ##
+    #  Get name of the disc
+    #
+    def name
+      return @name if @name
+      cleanup(info).each do |line|
+        @name = line[2] if line[0] == "CINFO:2"
+      end
+      return @name
     end
 
     ##
