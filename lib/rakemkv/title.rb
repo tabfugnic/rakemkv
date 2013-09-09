@@ -11,7 +11,9 @@ module RakeMKV
     # Constructor for title
     #
     def initialize(id, time, cells, code=nil)
-      @id = id.to_i
+      # These claim to start at 1, but the CLI treats them as starting from 0
+      # Very confusing
+      @id = id.to_i - 1
       @time =  convert_to_sec(time)
       @cells = cells.to_i
       @code = code
