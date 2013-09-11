@@ -3,7 +3,7 @@ module RakeMKV
   #  Disc object
   #
   class Disc
-    attr_reader :path
+    attr_reader :path, :raw_info, :info
     attr_writer :titles, :format
 
     ##
@@ -12,6 +12,8 @@ module RakeMKV
     def initialize(location)
       @path = determine_path(location)
       @titles = Array.new
+      @raw_info = load_info(@path)
+      @info = cleanup(self.raw_info)
     end
 
     ##
@@ -19,13 +21,6 @@ module RakeMKV
     #
     def self.drives
       `#{mkvcon} info disc:9999`
-    end
-
-    ##
-    #  get information on disc
-    #
-    def info
-      @info ||= `#{mkvcon} info #{path}`
     end
 
     ##
@@ -40,11 +35,11 @@ module RakeMKV
     end
 
     ##
-    #  get disc type information
+    #  get disc typeraw_information
     #
     def format
       return @format if @format
-      cleanup(info).each do |line|
+      info.each do |line|
         @format = line[2].sub(" disc", "") if line[0] == "CINFO:1"
       end
       return @format
@@ -55,7 +50,7 @@ module RakeMKV
     #
     def name
       return @name if @name
-      cleanup(info).each do |line|
+      info.each do |line|
         @name = line[2] if line[0] == "CINFO:2"
       end
       return @name
@@ -73,7 +68,7 @@ module RakeMKV
     #
     def titles
       return @titles unless @titles.empty?
-      cleanup(info).each do |line|
+      info.each do |line|
         @titles << Title.new(line[-3], line[-1], line[-2], line[0]) if line[0] == "MSG:3028"
       end
       return @titles
@@ -96,8 +91,12 @@ module RakeMKV
       return Disc.mkvcon
     end
 
-    def cleanup(info) # Better way to do this?  Maybe
-      info.split("\n").each.map do |line|
+    def load_info(path)
+      return `#{mkvcon} info #{path}`
+    end
+
+    def cleanup(raw_info) # Better way to do this?  Maybe
+     raw_info.split("\n").each.map do |line|
         line.split(",").each.map do |element|
           element.strip.gsub(/\"/, "")
         end
