@@ -56,35 +56,36 @@ describe RakeMKV::Disc do
 
   describe '#transcode!' do
     subject(:disc) { RakeMKV::Disc.new('disc:0') }
+    let(:title) { double(RakeMKV::Title, id: 0, time: 1222) }
     before { File.stub(:directory?).and_return true }
+
     it 'errors when destination does not exist' do
-      disc.stub(:titles).and_return [ RakeMKV::Title.new(0, 1222, 12) ]
+      disc.stub(:titles).and_return [title]
       File.stub(:directory?).and_return false
       expect { disc.transcode!('/path/to/heart/') }.to raise_error
     end
+
     it 'accepts destination' do
-      disc.stub(:titles).and_return [ RakeMKV::Title.new(0, 1222, 12) ]
+      disc.stub(:titles).and_return [title]
       expect_any_instance_of(RakeMKV::Command).to receive(:mkv)
         .with(0, '/path/to/heart/').at_least(:once)
       disc.transcode!('/path/to/heart/')
     end
-    it 'converts all relevant titles' do
-      disc.stub(:titles).and_return [ RakeMKV::Title.new(0, 1222, 12), RakeMKV::Title.new(1, 1222, 12)]
-      expect_any_instance_of(RakeMKV::Command).to receive(:mkv).with(0, '/path/to/heart/')
-      expect_any_instance_of(RakeMKV::Command).to receive(:mkv).with(1, '/path/to/heart/')
-      disc.transcode!('/path/to/heart/')
-    end
+
     it 'converts titles based on time' do
-      disc.stub(:titles).and_return [ RakeMKV::Title.new(0, 1000, 12), RakeMKV::Title.new(1, 2222, 12) ]
+      title2 = double(RakeMKV::Title, id: 1, time: 1000)
+      disc.stub(:titles).and_return [title2, title]
       expect_any_instance_of(RakeMKV::Command).to receive(:mkv)
-        .with(1, '/path/to/heart/')
+        .with(0, '/path/to/heart/')
       disc.transcode!('/path/to/heart/')
     end
+
     it 'converts only a specific title' do
-      disc.stub(:titles).and_return [ RakeMKV::Title.new(0, 2119, 12), RakeMKV::Title.new(1, 2222, 12)]
+      title2 = double(RakeMKV::Title, id: 1, time: 1000)
+      disc.stub(:titles).and_return [title2, title]
       expect_any_instance_of(RakeMKV::Command).to receive(:mkv)
-        .with(1, '/path/to/heart/')
-      disc.transcode!('/path/to/heart/', 1)
+        .with(0, '/path/to/heart/')
+      disc.transcode!('/path/to/heart/', 0)
     end
   end
 
@@ -98,18 +99,20 @@ describe RakeMKV::Disc do
   describe '#short?' do
     subject(:disc) { RakeMKV::Disc.new('disc:0') }
     it 'returns true for short shows' do
-      disc.stub(:titles).and_return([RakeMKV::Title.new(3, 1300, 2), RakeMKV::Title.new(3, 1300, 2), RakeMKV::Title.new(3, 1300, 2)])
-      disc.short?.should be_true
+      title = double(RakeMKV::Title, short_length?: true)
+      disc.stub(:titles).and_return([title, title, title])
+      expect(disc).to be_short
     end
     it 'returns false when certain titles are too long' do
-      disc.stub(:titles).and_return([RakeMKV::Title.new(3, 1300, 2), RakeMKV::Title.new(3, 1300, 2), RakeMKV::Title.new(3, 4300, 2)])
-      disc.short?.should be_false
+      title = double(RakeMKV::Title, short_length?: true)
+      long_title = double(RakeMKV::Title, short_length?: false)
+      disc.stub(:titles).and_return([title, title, long_title])
+      expect(disc).to_not be_short
     end
   end
 
   describe '.discs' do
     it 'checks all discs' do
-      expect(RakeMKV::Command).to receive(:new).with('disc:9999').and_call_original
       expect_any_instance_of(RakeMKV::Command).to receive(:info)
       RakeMKV::Disc.discs
     end

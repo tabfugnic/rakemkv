@@ -20,7 +20,7 @@ module RakeMKV
     #  Find available discs and content
     #
     def self.discs
-      Command.new("disc:9999").info
+      Command.new('disc:9999').info
     end
 
     ##
@@ -61,7 +61,7 @@ module RakeMKV
     def titles
       return @titles unless @titles.empty?
       info.tinfo.each_with_index do |title, title_id|
-        @titles << Title.new(title_id, title[:duration], title[:chapter_count])
+        @titles << Title.new(title_id, title)
       end
       return @titles
     end
