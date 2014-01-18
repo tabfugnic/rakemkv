@@ -4,10 +4,7 @@ describe RakeMKV::Title do
   describe "#initialize" do
     context "title_id" do
       it "accepts title id" do
-        RakeMKV::Title.new(1, "11", 12).id.should eq 0
-      end
-      it "accepts title id string" do
-        RakeMKV::Title.new("1", "11", 12).id.should eq 0
+        RakeMKV::Title.new(0, "11", 12).id.should eq 0
       end
     end
     context "title_time" do

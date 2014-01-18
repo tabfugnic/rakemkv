@@ -1,8 +1,7 @@
 module RakeMKV
   class Title
 
-    attr_accessor :id, :cells
-    attr_reader :time
+    attr_reader :time, :id, :code, :cells
 
     MINUTE = 60
     HOUR = 3600
@@ -12,11 +11,9 @@ module RakeMKV
     #
     def initialize(id, time, cells, code=nil)
       # These claim to start at 1, but the CLI treats them as starting from 0
-      # Very confusing
-      @id = id.to_i - 1
+      @id = id
       @time =  convert_to_sec(time)
       @cells = cells.to_i
-      @code = code
     end
 
     ##
