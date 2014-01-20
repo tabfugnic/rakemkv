@@ -11,7 +11,7 @@ module RakeMKV
     #
     def initialize(location)
       @path = determine_path(location)
-      @titles = Array.new
+      @titles = RakeMKV::Titles.new
       @command = Command.new(@path)
       @info = RakeMKV::Parser.new(@command.info)
     end
@@ -26,7 +26,7 @@ module RakeMKV
     ##
     #  Transcode information on disc
     #
-    def transcode!(destination, sel_title=nil, time=1200)
+    def transcode!(destination, sel_title = nil, time = 1200)
       destination = check(destination)
       titles.each do |title|
         next if sel_title && sel_title != title.id
@@ -52,7 +52,7 @@ module RakeMKV
     #  Get longest title
     #
     def longest
-      titles.max { |a,b| a.time <=> b.time }
+      titles.max { |a, b| a.time <=> b.time }
     end
 
     ##
@@ -63,7 +63,7 @@ module RakeMKV
       info.tinfo.each_with_index do |title, title_id|
         @titles << Title.new(title_id, title)
       end
-      return @titles
+      @titles
     end
 
     ##
@@ -76,8 +76,8 @@ module RakeMKV
     private
 
     def check(destination)
-      raise StandardError unless File.directory? destination
-      return destination
+      fail StandardError unless File.directory? destination
+      destination
     end
 
     def determine_path(location)
@@ -85,7 +85,7 @@ module RakeMKV
       return "iso:#{location}" if location =~ /iso$/
       return "disc:#{location}" if location.is_a? Integer
       return location if location =~ /^disc/
-      raise RuntimeError
+      fail RuntimeError
     end
   end
 end

@@ -1,4 +1,7 @@
 module RakeMKV
+  ##
+  #  Code
+  #
   class Code
     attr_reader :index
     def initialize(index)
@@ -10,10 +13,11 @@ module RakeMKV
     end
 
     def self.[](index)
-      self.new(index).to_sym
+      new(index).to_sym
     end
 
     private
+
     CODES =
       [:unknown,
        :type,
