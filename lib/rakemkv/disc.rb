@@ -3,8 +3,7 @@ module RakeMKV
   #  Disc object
   #
   class Disc
-    attr_reader :path, :raw_info, :info, :command, :titles
-    attr_writer :format
+    attr_reader :path, :info, :command, :titles
 
     ##
     #  Initialize disc
