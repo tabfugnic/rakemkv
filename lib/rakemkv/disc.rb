@@ -3,8 +3,8 @@ module RakeMKV
   #  Disc object
   #
   class Disc
-    attr_reader :path, :raw_info, :info, :command
-    attr_writer :titles, :format
+    attr_reader :path, :raw_info, :info, :command, :titles
+    attr_writer :format
 
     ##
     #  Initialize disc
@@ -26,11 +26,14 @@ module RakeMKV
     ##
     #  Transcode information on disc
     #
-    def transcode!(destination, sel_title = nil, time = 1200)
+    def transcode!(destination, options={})
       destination = check(destination)
-      titles.each do |title|
-        next if sel_title && sel_title != title.id
-        command.mkv(title.id, destination) if title.time > time
+      if options[:title_id]
+        command.mkv(options[:title_id], destination)
+      elsif options[:all_titles]
+        titles.each { |title| command.mkv(title.id, destination) }
+      else
+        command.mkv(titles.longest.id, destination)
       end
     end
 

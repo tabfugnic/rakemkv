@@ -40,36 +40,40 @@ describe RakeMKV::Disc do
 
   describe '#transcode!' do
     subject(:disc) { RakeMKV::Disc.new('disc:0') }
-    let(:title) { double(RakeMKV::Title, id: 0, time: 1222) }
-    before { File.stub(:directory?).and_return true }
+    let(:title) { double(RakeMKV::Title, id: 0) }
+    before do
+      File.stub(:directory?).and_return true
+    end
 
     it 'errors when destination does not exist' do
-      disc.stub(:titles).and_return [title]
       File.stub(:directory?).and_return false
       expect { disc.transcode!('/path/to/heart/') }.to raise_error
     end
 
-    it 'accepts destination' do
-      disc.stub(:titles).and_return [title]
-      expect_any_instance_of(RakeMKV::Command).to receive(:mkv)
-        .with(0, '/path/to/heart/').at_least(:once)
-      disc.transcode!('/path/to/heart/')
-    end
-
-    it 'converts titles based on time' do
-      title2 = double(RakeMKV::Title, id: 1, time: 1000)
-      disc.stub(:titles).and_return [title2, title]
+    it 'converts only the longest title' do
+      expect(disc.titles).to receive(:longest).and_return title
       expect_any_instance_of(RakeMKV::Command).to receive(:mkv)
         .with(0, '/path/to/heart/')
       disc.transcode!('/path/to/heart/')
     end
 
     it 'converts only a specific title' do
-      title2 = double(RakeMKV::Title, id: 1, time: 1000)
-      disc.stub(:titles).and_return [title2, title]
       expect_any_instance_of(RakeMKV::Command).to receive(:mkv)
-        .with(0, '/path/to/heart/')
-      disc.transcode!('/path/to/heart/', 0)
+        .with(1, '/path/to/heart/')
+      disc.transcode!('/path/to/heart/', title_id: 1)
+    end
+
+    it 'converts all titles' do
+      title1 = double(RakeMKV::Title, id: 1)
+
+      allow_any_instance_of(RakeMKV::Command)
+        .to receive(:mkv)
+
+      allow(disc).to receive(:titles).and_return [title, title1]
+
+      expect_any_instance_of(RakeMKV::Command).to receive(:mkv)
+        .with(1, '/path/to/heart/').at_least(:once)
+      disc.transcode!('/path/to/heart/', all_titles: true)
     end
   end
 
