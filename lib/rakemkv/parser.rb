@@ -5,10 +5,16 @@ module RakeMKV
   class Parser
     attr_reader :raw
 
+    ##
+    #  Initialize using info received from disc
+    #
     def initialize(raw_info)
       @raw = raw_info
     end
 
+    ##
+    #  Grab information from cinfo
+    #
     def cinfo
       @cinfo = {}
       guide('CINFO') do |line|
@@ -18,6 +24,9 @@ module RakeMKV
       @cinfo
     end
 
+    ##
+    #  Grab information from tinfo
+    #
     def tinfo
       @tinfo = []
       guide('TINFO') do |line|
@@ -29,6 +38,9 @@ module RakeMKV
       @tinfo
     end
 
+    ##
+    #  Grab information from sinfo
+    #
     def sinfo
       @sinfo = []
       guide('SINFO') do |line|
@@ -42,6 +54,9 @@ module RakeMKV
       @sinfo
     end
 
+    ##
+    #  Grab information from messages
+    #
     def messages
       @messages = cleaned.map do |line|
         split = line[0].split(':')
@@ -51,6 +66,9 @@ module RakeMKV
       @messages
     end
 
+    ##
+    #  Grab information from discs
+    #
     def drives
       @drives = cleaned.map do |line|
         if line[0].split(':').first == 'DRV'

@@ -7,9 +7,9 @@ module RakeMKV
     HOUR = 3600
 
     ##
-    # Constructor for title
+    #  Initialize with a required id
     #
-    def initialize(id, options)
+    def initialize(id, options={})
       # These claim to start at 1, but the CLI treats them as starting from 0
       @id = id
       @time =  convert_to_sec(options[:duration])
@@ -26,10 +26,6 @@ module RakeMKV
 
     private
 
-    ##
-    # Convert string of time in format HH:MM:SEC
-    # to integer representing time in seconds
-    #
     def convert_to_sec(time)
       return time if time.is_a? Integer
       times = time.split(':')

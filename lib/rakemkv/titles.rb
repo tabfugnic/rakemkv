@@ -3,13 +3,16 @@ module RakeMKV
   # Titles
   #
   class Titles < Array
+    ##
+    #  Initialize title with the assumption of parsed content
+    #
     def initialize(titles)
       if titles.first.is_a? Hash
         titles.each_with_index do |title, title_id|
           self << Title.new(title_id, title)
         end
       else
-        super
+        super # default to treating it like an array
       end
     end
 
