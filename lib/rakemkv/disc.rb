@@ -11,9 +11,9 @@ module RakeMKV
     #
     def initialize(location)
       @path = determine_path(location)
-      @titles = RakeMKV::Titles.new
       @command = Command.new(@path)
       @info = RakeMKV::Parser.new(@command.info)
+      @titles = RakeMKV::Titles.new(info.tinfo)
     end
 
     ##
@@ -46,31 +46,6 @@ module RakeMKV
     #
     def name
       info.cinfo[:name]
-    end
-
-    ##
-    #  Get longest title
-    #
-    def longest
-      titles.max { |a, b| a.time <=> b.time }
-    end
-
-    ##
-    #  Get title information on disc
-    #
-    def titles
-      return @titles unless @titles.empty?
-      info.tinfo.each_with_index do |title, title_id|
-        @titles << Title.new(title_id, title)
-      end
-      @titles
-    end
-
-    ##
-    #  Check for shorter lengthed video
-    #
-    def short?
-      titles.select { |t| t.short_length? }.length >= 3
     end
 
     private

@@ -26,15 +26,8 @@ describe RakeMKV::Disc do
       RakeMKV::Disc.new('disc:0')
     end
     it 'parses the info into something more usable' do
-      expect(RakeMKV::Parser).to receive(:new)
+      expect(RakeMKV::Parser).to receive(:new).and_call_original
       RakeMKV::Disc.new('disc:0')
-    end
-  end
-
-  describe '#titles' do
-    subject(:disc) { RakeMKV::Disc.new('disc:0') }
-    it 'finds all titles amongst returned content' do
-      expect(disc.titles.first).to be_a RakeMKV::Title
     end
   end
 
@@ -42,15 +35,6 @@ describe RakeMKV::Disc do
     subject(:disc) { RakeMKV::Disc.new('disc:0') }
     it 'finds the disc type' do
       expect(disc.type).to eq 'DVD disc'
-    end
-  end
-
-  describe '#longest' do
-    subject(:disc) { RakeMKV::Disc.new('disc:0') }
-    let(:title) { double(RakeMKV::Title, time: 50) }
-    it 'finds the longest time' do
-      disc.stub(:titles) { [ double(RakeMKV::Title, time: 20), title] }
-      expect(disc.longest).to eq title
     end
   end
 
@@ -93,21 +77,6 @@ describe RakeMKV::Disc do
     subject(:disc) { RakeMKV::Disc.new('disc:0') }
     it 'grabs the name of the disc' do
       expect(disc.name).to eq 'DIME_NTSC'
-    end
-  end
-
-  describe '#short?' do
-    subject(:disc) { RakeMKV::Disc.new('disc:0') }
-    it 'returns true for short shows' do
-      title = double(RakeMKV::Title, short_length?: true)
-      disc.stub(:titles).and_return([title, title, title])
-      expect(disc).to be_short
-    end
-    it 'returns false when certain titles are too long' do
-      title = double(RakeMKV::Title, short_length?: true)
-      long_title = double(RakeMKV::Title, short_length?: false)
-      disc.stub(:titles).and_return([title, title, long_title])
-      expect(disc).to_not be_short
     end
   end
 
