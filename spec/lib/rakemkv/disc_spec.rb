@@ -62,19 +62,6 @@ describe RakeMKV::Disc do
         .with(1, '/path/to/heart/')
       disc.transcode!('/path/to/heart/', title_id: 1)
     end
-
-    it 'converts all titles' do
-      title1 = double(RakeMKV::Title, id: 1)
-
-      allow_any_instance_of(RakeMKV::Command)
-        .to receive(:mkv)
-
-      allow(disc).to receive(:titles).and_return [title, title1]
-
-      expect_any_instance_of(RakeMKV::Command).to receive(:mkv)
-        .with(1, '/path/to/heart/').at_least(:once)
-      disc.transcode!('/path/to/heart/', all_titles: true)
-    end
   end
 
   describe '#name' do

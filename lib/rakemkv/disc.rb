@@ -25,12 +25,10 @@ module RakeMKV
     ##
     #  Transcode information on disc
     #
-    def transcode!(destination, options={})
+    def transcode!(destination, options = {})
       destination = check(destination)
       if options[:title_id]
         command.mkv(options[:title_id], destination)
-      elsif options[:all_titles]
-        titles.each { |title| command.mkv(title.id, destination) }
       else
         command.mkv(titles.longest.id, destination)
       end
