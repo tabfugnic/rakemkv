@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe RakeMKV::Disc do
   before do
-    allow_any_instance_of(RakeMKV::Command).to receive(:info) { RakeMKVMock.info }
+    allow_any_instance_of(RakeMKV::Command)
+      .to receive(:info) { RakeMKVMock.info }
   end
 
   describe '#new' do
@@ -28,13 +29,6 @@ describe RakeMKV::Disc do
     it 'parses the info into something more usable' do
       expect(RakeMKV::Parser).to receive(:new).and_call_original
       RakeMKV::Disc.new('disc:0')
-    end
-  end
-
-  describe '#type' do
-    subject(:disc) { RakeMKV::Disc.new('disc:0') }
-    it 'finds the disc type' do
-      expect(disc.type).to eq 'DVD disc'
     end
   end
 
