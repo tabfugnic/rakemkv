@@ -1,10 +1,15 @@
 require 'spec_helper'
 
 describe RakeMKV::Command do
-  describe '#new' do
-    it 'assigns path' do
-      command = RakeMKV::Command.new('disc:0')
-      expect(command.path).to eq 'disc:0'
+  describe '.installed?' do
+    it 'send message to verify makemkv is installed' do
+      allow(RakeMKV::Command).to receive(:'`').and_return('')
+      RakeMKV::Command.installed?
+      expect(RakeMKV::Command).to have_received(:'`').with('which makemkvcon -r')
+    end
+    it 'verifies makemkv is installed' do
+      RakeMKV::Command.stub(:'`').and_return('')
+      expect(RakeMKV::Command).not_to be_installed
     end
   end
 

@@ -2,7 +2,8 @@
 #  Command Object
 #
 class RakeMKV::Command
-  attr_reader :path
+  # Always use robot mode
+  APP = 'makemkvcon -r'
 
   ##
   #  Initialize with path
@@ -12,22 +13,23 @@ class RakeMKV::Command
   end
 
   ##
+  #  Check if mkv is installed
+  #
+  def self.installed?
+    !`which #{APP}`.empty?
+  end
+
+  ##
   #  Call info command on disc
   #
   def info
-    @info ||= `#{app} info #{path}`
+    @info ||= `#{APP} info #{@path}`
   end
 
   ##
   #  Call mkv command on disc
   #
   def mkv(title_id, destination)
-    @mkv ||= `#{app} mkv #{path} #{title_id} #{destination}`
-  end
-
-  private
-
-  def app
-    'makemkvcon -r' # Always use robot mode
+    @mkv ||= `#{APP} mkv #{@path} #{title_id} #{destination}`
   end
 end
