@@ -1,26 +1,18 @@
-##
 #  Code
-#
 class RakeMKV::Code
   attr_reader :index
 
-  ##
   #  Initialize code
-  #
   def initialize(index)
     @index = index.to_i
   end
 
-  ##
   #  Take code and convert it to the proper symbol
-  #
   def to_sym
     CODES[index]
   end
 
-  ##
   #  Short hand to initialize code and convert it to symbol
-  #
   def self.[](index)
     new(index).to_sym
   end

@@ -1,10 +1,7 @@
-##
 # Titles
-#
 class RakeMKV::Titles < Array
-  ##
+
   #  Initialize title with the assumption of parsed content
-  #
   def initialize(titles)
     if titles.first.is_a? Hash
       titles.each_with_index do |title, title_id|
@@ -15,16 +12,12 @@ class RakeMKV::Titles < Array
     end
   end
 
-  ##
   #  Find title by id
-  #
   def at_id(id)
     select { |title| title.id == id }.first
   end
 
-  ##
   #  Get longest title
-  #
   def longest
     max { |a, b| a.time <=> b.time }
   end

@@ -1,12 +1,8 @@
-##
 #  Disc object
-#
 class RakeMKV::Disc
   attr_reader :path, :info, :command, :titles
 
-  ##
   #  Initialize disc
-  #
   def initialize(location)
     @path = determine_path(location)
     @command = RakeMKV::Command.new(@path)
@@ -14,16 +10,12 @@ class RakeMKV::Disc
     @titles = RakeMKV::Titles.new(info.tinfo)
   end
 
-  ##
   #  Find available discs and content
-  #
   def self.discs
     RakeMKV::Command.new('disc:9999').info
   end
 
-  ##
   #  Transcode information on disc
-  #
   def transcode!(destination, options = {})
     check!(destination)
     if options[:title_id]
@@ -33,9 +25,7 @@ class RakeMKV::Disc
     end
   end
 
-  ##
   #  Meta disc information
-  #
   def method_missing(method, *args)
     info.cinfo[method.to_sym] || super
   end

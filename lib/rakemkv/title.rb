@@ -1,15 +1,11 @@
-##
 #  Title
-#
 class RakeMKV::Title
   attr_reader :time, :id, :code, :chapter_count, :size
 
   MINUTE = 60
   HOUR = 3600
 
-  ##
   #  Initialize with a required id
-  #
   def initialize(id, options = {})
     # These claim to start at 1, but the CLI treats them as starting from 0
     @id = id
@@ -18,9 +14,7 @@ class RakeMKV::Title
     @size = options[:disk_size_bytes].to_i
   end
 
-  ##
   # Find short lengthed title
-  #
   def short_length?
     time > 900 && time < 2100
   end

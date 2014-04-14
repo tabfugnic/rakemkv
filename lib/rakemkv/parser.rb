@@ -1,6 +1,4 @@
-##
 # Parser
-#
 class RakeMKV::Parser
   CINFO_REGEX = /CINFO:(\d+),\d+,"(.+)"/
   DRIVES_REGEX = /DRV:\d+,\d+,\d+,(\d+),"(.*)","(.*)","(.*)"/
@@ -10,16 +8,12 @@ class RakeMKV::Parser
 
   attr_reader :raw
 
-  ##
   #  Initialize using info received from disc
-  #
   def initialize(raw_info)
     @raw = raw_info
   end
 
-  ##
   #  Grab information from cinfo
-  #
   def cinfo
     @cinfo = {}
     parse(CINFO_REGEX) do |code, info|
@@ -29,9 +23,7 @@ class RakeMKV::Parser
     @cinfo
   end
 
-  ##
   #  Grab information from tinfo
-  #
   def tinfo
     @tinfo = []
     parse(TINFO_REGEX) do |title_id, code, info|
@@ -42,9 +34,7 @@ class RakeMKV::Parser
     @tinfo
   end
 
-  ##
   #  Grab information from sinfo
-  #
   def sinfo
     @sinfo = []
     parse(SINFO_REGEX) do |title_id, section_id, code, info|
@@ -58,9 +48,7 @@ class RakeMKV::Parser
     @sinfo
   end
 
-  ##
   #  Grab information from messages
-  #
   def messages
     @messages = Array.new
     parse(MSG_REGEX) do |info|
@@ -69,9 +57,7 @@ class RakeMKV::Parser
     @messages
   end
 
-  ##
   #  Grab information from discs
-  #
   def drives
     @drives = Array.new
     parse(DRIVES_REGEX) do |accessible, drive_name, disc_name, location|
