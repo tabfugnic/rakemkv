@@ -35,8 +35,11 @@ describe RakeMKV::Parser do
 
   describe '#drives' do
     it 'parses drives information' do
-      expect(parse.drives[0]).to eq({ accessible: true, drive_name: 'DVD+R-DL MATSHITA DVD-RAM UJ8C2 SB01', disc_name: 'DIME_NTSC' })
+      drive = { accessible: true,
+                drive_name: 'DVD+R-DL MATSHITA DVD-RAM UJ8C2 SB01',
+                disc_name: 'DIME_NTSC',
+                location: '/dev/sr0' }
+      expect(parse.drives).to include(drive)
     end
   end
-
 end

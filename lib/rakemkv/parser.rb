@@ -1,8 +1,13 @@
-
 ##
 # Parser
 #
 class RakeMKV::Parser
+  CINFO_REGEX = /CINFO:(\d+),\d+,"(.+)"/
+  DRIVES_REGEX = /DRV:\d+,\d+,\d+,(\d+),"(.*)","(.*)","(.*)"/
+  MSG_REGEX = /MSG:[^"]*"([^"]*)"/
+  SINFO_REGEX = /SINFO:(\d+),(\d+),(\d+),\d+,"(.*)"/
+  TINFO_REGEX = /TINFO:(\d+),(\d+),\d+,"(.*)"/
+
   attr_reader :raw
 
   ##
@@ -17,9 +22,9 @@ class RakeMKV::Parser
   #
   def cinfo
     @cinfo = {}
-    guide('CINFO') do |line|
-      code = RakeMKV::Code[line[0]]
-      @cinfo[code] = line[2]
+    parse(CINFO_REGEX) do |code, info|
+      code = RakeMKV::Code[code]
+      @cinfo[code] = info
     end
     @cinfo
   end
@@ -29,11 +34,10 @@ class RakeMKV::Parser
   #
   def tinfo
     @tinfo = []
-    guide('TINFO') do |line|
-      code = RakeMKV::Code[line[1]]
-      title = line[0].to_i
-      @tinfo[title] = Hash.new unless @tinfo[title].is_a? Hash
-      @tinfo[title][code] = line[3]
+    parse(TINFO_REGEX) do |title_id, code, info|
+      code = RakeMKV::Code[code]
+      @tinfo[title_id.to_i] ||= Hash.new
+      @tinfo[title_id.to_i][code] = info
     end
     @tinfo
   end
@@ -43,13 +47,13 @@ class RakeMKV::Parser
   #
   def sinfo
     @sinfo = []
-    guide('SINFO') do |line|
-      code = RakeMKV::Code[line[2]]
-      title = line[0].to_i
-      specific = line[1].to_i
-      @sinfo[title] = Array.new unless @sinfo[title].is_a? Array
-      @sinfo[title][specific] = {} unless @sinfo[title][specific].is_a? Hash
-      @sinfo[title][specific][code] = line[4]
+    parse(SINFO_REGEX) do |title_id, section_id, code, info|
+      code = RakeMKV::Code[code]
+      title = title_id.to_i
+      specific = section_id.to_i
+      @sinfo[title] ||= Array.new
+      @sinfo[title][specific] ||= Hash.new
+      @sinfo[title][specific][code] = info
     end
     @sinfo
   end
@@ -58,11 +62,10 @@ class RakeMKV::Parser
   #  Grab information from messages
   #
   def messages
-    @messages = cleaned.map do |line|
-      split = line[0].split(':')
-      line[3] if split.first == 'MSG'
+    @messages = Array.new
+    parse(MSG_REGEX) do |info|
+      @messages << info.first
     end
-    @messages.compact!
     @messages
   end
 
@@ -70,36 +73,26 @@ class RakeMKV::Parser
   #  Grab information from discs
   #
   def drives
-    @drives = cleaned.map do |line|
-      if line[0].split(':').first == 'DRV'
-        { accessible: accessible(line),
-          drive_name: line[4],
-          disc_name: line[5] }
-      end
+    @drives = Array.new
+    parse(DRIVES_REGEX) do |accessible, drive_name, disc_name, location|
+      drive = { accessible: accessible(accessible),
+                drive_name: drive_name,
+                disc_name: disc_name,
+                location: location }
+      @drives << drive
     end
-    @drives.compact!
     @drives
   end
 
   private
 
-  def guide(content, &block)
-    cleaned.each do |line|
-      split = line[0].split(':')
-      line[0] = split.last
-      yield(line) if split.first == content
-    end
+  def accessible(accessible)
+    accessible != '0'
   end
 
-  def accessible(line)
-    line[1].to_i > 0
-  end
-
-  def cleaned # Better way to do this?  Maybe
-    raw.split("\n").each.map do |line|
-      line.split(',').each.map do |element|
-        element.strip.gsub(/\"/, '')
-      end
+  def parse(regex, &block)
+    raw.split('\n').each do |line|
+      line.scan(regex, &block)
     end
   end
 end
