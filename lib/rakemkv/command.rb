@@ -1,7 +1,6 @@
 #  Command Object
 class RakeMKV::Command
-  # Always use robot mode
-  APP = 'makemkvcon -r'
+  APP = "#{RakeMKV.binary} -r"
 
   #  Initialize with path
   def initialize(path)
@@ -22,4 +21,6 @@ class RakeMKV::Command
   def mkv(title_id, destination)
     @mkv ||= `#{APP} mkv #{@path} #{title_id} #{destination}`
   end
+
+  private
 end

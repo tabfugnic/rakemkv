@@ -11,20 +11,6 @@ describe RakeMKV::Titles do
     end
   end
 
-  describe '#new' do
-    it 'initializes a bunch of titles using the title_hashes' do
-      titles = [{ chapter_count: '24', duration: '1:10:22', disk_size_bytes: '4958869504' }]
-      expect(RakeMKV::Title).to receive(:new)
-      RakeMKV::Titles.new(titles)
-    end
-
-    it 'ignores arrays that are already title' do
-      title = double(RakeMKV::Title, id: 1)
-      expect(RakeMKV::Title).to_not receive(:new)
-      RakeMKV::Titles.new([title])
-    end
-  end
-
   describe '#longest' do
     it 'finds the longest time' do
       short_title = double(RakeMKV::Title, time: 20)
