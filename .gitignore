@@ -1,7 +1,10 @@
 *.gem
+*.orig
 *.rbc
+.#*
 .bundle
 .config
+.rspec
 .yardoc
 Gemfile.lock
 InstalledFiles
@@ -15,5 +18,3 @@ spec/reports
 test/tmp
 test/version_tmp
 tmp
-*.orig
-.#*
