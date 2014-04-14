@@ -50,10 +50,10 @@ class RakeMKV::Parser
     parse(SINFO_REGEX) do |title_id, section_id, code, info|
       code = RakeMKV::Code[code]
       title = title_id.to_i
-      specific = section_id.to_i
+      section = section_id.to_i
       @sinfo[title] ||= Array.new
-      @sinfo[title][specific] ||= Hash.new
-      @sinfo[title][specific][code] = info
+      @sinfo[title][section] ||= Hash.new
+      @sinfo[title][section][code] = info
     end
     @sinfo
   end
