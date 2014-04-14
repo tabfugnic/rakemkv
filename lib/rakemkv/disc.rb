@@ -25,7 +25,7 @@ class RakeMKV::Disc
   #  Transcode information on disc
   #
   def transcode!(destination, options = {})
-    destination = check(destination)
+    check!(destination)
     if options[:title_id]
       command.mkv(options[:title_id], destination)
     else
@@ -42,9 +42,8 @@ class RakeMKV::Disc
 
   private
 
-  def check(destination)
+  def check!(destination)
     fail StandardError unless File.directory? destination
-    destination
   end
 
   def determine_path(location)
