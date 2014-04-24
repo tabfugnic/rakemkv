@@ -1,4 +1,5 @@
 #  Command Object
+
 class RakeMKV::Command
   APP = "#{RakeMKV.binary} -r"
 
@@ -9,18 +10,17 @@ class RakeMKV::Command
 
   #  Check if mkv is installed
   def self.installed?
-    !`which #{APP}`.empty?
+    output = Cocaine::CommandLine.new('which', APP).run
+    !output.empty?
   end
 
   #  Call info command on disc
   def info
-    @info ||= `#{APP} info #{@path}`
+    @info ||= Cocaine::CommandLine.new(APP, 'info', @path).run
   end
 
   #  Call mkv command on disc
   def mkv(title_id, destination)
-    @mkv ||= `#{APP} mkv #{@path} #{title_id} #{destination}`
+    @mkv ||= Cocaine::CommandLine.new(APP, 'mkv', @path, title_id, destination).run
   end
-
-  private
 end

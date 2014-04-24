@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "json", "~> 1.7.7"
+  spec.add_dependency "cocaine"
 
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency "bundler"
