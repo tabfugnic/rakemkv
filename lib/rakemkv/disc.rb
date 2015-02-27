@@ -1,5 +1,6 @@
 #  Disc object
 class RakeMKV::Disc
+  attr_reader :location
 
   #  Initialize disc
   def initialize(location)
@@ -14,14 +15,14 @@ class RakeMKV::Disc
   # Get path from location
   def path
     case
-    when @location =~ /^\/dev/
-      "dev:#{@location}"
-    when @location =~ /iso$/
-      "iso:#{@location}"
-    when @location.is_a?(Integer)
-      "disc:#{@location}"
-    when @location =~ /^disc/
-      @location
+    when location =~ /^\/dev/
+      "dev:#{location}"
+    when location =~ /iso$/
+      "iso:#{location}"
+    when location.is_a?(Integer)
+      "disc:#{location}"
+    when location =~ /^disc/
+      location
     else
       raise RuntimeError
     end
@@ -33,7 +34,7 @@ class RakeMKV::Disc
   end
 
   #  Transcode information on disc
-  def transcode!(destination, options = {})
+  def transcode!(destination = '.', options = {})
     check!(destination)
     title_id = options[:title_id] || titles.longest.id
     command.mkv(title_id, destination)
@@ -59,6 +60,6 @@ class RakeMKV::Disc
   end
 
   def command
-    RakeMKV::Command.new(@path)
+    RakeMKV::Command.new(path)
   end
 end
