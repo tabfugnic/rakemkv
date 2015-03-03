@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'transcoding disc' do
   it 'copies disc to destination' do
+    RakeMKV.config.minimum_title_length = 2
     movie = File.new('./spec/fixtures/movie.iso')
     movie_path = File.expand_path(movie.path)
 

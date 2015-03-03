@@ -1,7 +1,10 @@
 require 'spec_helper'
 
-describe RakeMKV, '.binary' do
-  it 'uses makemkvcon as default' do
-    expect(RakeMKV.binary).to eq 'makemkvcon'
+describe RakeMKV do
+  describe '.config' do
+    it 'creates a single instance of a config' do
+      expect(RakeMKV.config).to equal RakeMKV.config
+    end
   end
+  describe '.confiure'
 end

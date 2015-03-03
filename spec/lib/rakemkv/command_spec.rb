@@ -5,7 +5,7 @@ describe RakeMKV::Command do
 
     it 'verifies makemkv is installed' do
       allow(Cocaine::CommandLine).to receive(:new)
-        .with('which', 'makemkvcon -r')
+        .with('which', 'makemkvcon')
         .and_return(double('command', run: '/something/great'))
       expect(RakeMKV::Command).to be_installed
     end
