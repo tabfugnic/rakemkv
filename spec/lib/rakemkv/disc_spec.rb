@@ -65,11 +65,4 @@ describe RakeMKV::Disc do
       expect(disc.titles).to include 'new_title'
     end
   end
-
-  describe '.discs' do
-    it 'checks all discs' do
-      expect_any_instance_of(RakeMKV::Command).to receive(:info)
-      RakeMKV::Disc.discs
-    end
-  end
 end

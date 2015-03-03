@@ -16,11 +16,17 @@ class RakeMKV::Command
 
   #  Call info command on disc
   def info
-    @info ||= Cocaine::CommandLine.new(APP, "info #{@path}").run
+    @info ||= execute(APP, "info #{@path}")
   end
 
   #  Call mkv command on disc
   def mkv(title_id, destination)
-    @mkv ||= Cocaine::CommandLine.new(APP, "mkv #{@path} #{title_id} #{destination}").run
+    @mkv ||= execute(APP, "mkv #{@path} #{title_id} #{destination}")
+  end
+
+  private
+
+  def execute(binary, command)
+    Cocaine::CommandLine.new(binary, command).run
   end
 end

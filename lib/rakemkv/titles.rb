@@ -1,9 +1,18 @@
 # Titles
-class RakeMKV::Titles < Array
+class RakeMKV::Titles
+  include Enumerable
+
+  def initialize(titles)
+    @titles = titles
+  end
+
+  def each(&block)
+    @titles.each(&block)
+  end
 
   #  Find title by id
   def at_id(id)
-    select { |title| title.id == id }.first
+    detect { |title| title.id == id }
   end
 
   #  Get longest title

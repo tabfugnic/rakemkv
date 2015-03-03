@@ -7,21 +7,15 @@ class RakeMKV::Disc
     @location = location
   end
 
-  #  Find available discs and content
-  def self.discs
-    RakeMKV::Command.new('disc:9999').info
-  end
-
   # Get path from location
   def path
-    case
-    when location =~ /^\/dev/
+    if location =~ /^\/dev/
       "dev:#{location}"
-    when location =~ /iso$/
+    elsif location =~ /iso$/
       "iso:#{location}"
-    when location.is_a?(Integer)
+    elsif location.is_a?(Integer)
       "disc:#{location}"
-    when location =~ /^disc/
+    elsif location =~ /^disc/
       location
     else
       raise RuntimeError
@@ -42,10 +36,7 @@ class RakeMKV::Disc
 
   # Get titles for disc
   def titles
-    @titles ||= info.tinfo.each_with_index.map do |title, title_id|
-      RakeMKV::Title.new(title_id, title)
-    end
-    RakeMKV::Titles.new(@titles)
+    RakeMKV::Titles.new(build_titles)
   end
 
   #  Meta disc information
@@ -55,11 +46,19 @@ class RakeMKV::Disc
 
   private
 
-  def check!(destination)
-    raise StandardError unless File.directory? destination
-  end
-
   def command
     RakeMKV::Command.new(path)
+  end
+
+  def build_titles
+    info.tinfo.each_with_index.map do |title, title_id|
+      RakeMKV::Title.new(title_id, title)
+    end
+  end
+
+  def check_directory!(destination)
+    unless File.directory? destination
+      raise StandardError
+    end
   end
 end

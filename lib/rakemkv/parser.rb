@@ -15,59 +15,60 @@ class RakeMKV::Parser
 
   #  Grab information from cinfo
   def cinfo
-    @cinfo = {}
+    cinfo = {}
     parse(CINFO_REGEX) do |code, info|
       code = RakeMKV::Code[code]
-      @cinfo[code] = info
+      cinfo[code] = info
     end
-    @cinfo
+    cinfo
   end
 
   #  Grab information from tinfo
   def tinfo
-    @tinfo = []
+    tinfo = []
     parse(TINFO_REGEX) do |title_id, code, info|
       code = RakeMKV::Code[code]
-      @tinfo[title_id.to_i] ||= Hash.new
-      @tinfo[title_id.to_i][code] = info
+      tinfo[title_id.to_i] ||= Hash.new
+      tinfo[title_id.to_i][code] = info
     end
-    @tinfo
+    tinfo
   end
 
   #  Grab information from sinfo
   def sinfo
-    @sinfo = []
+    sinfo = []
     parse(SINFO_REGEX) do |title_id, section_id, code, info|
       code = RakeMKV::Code[code]
       title = title_id.to_i
       section = section_id.to_i
-      @sinfo[title] ||= Array.new
-      @sinfo[title][section] ||= Hash.new
-      @sinfo[title][section][code] = info
+      sinfo[title] ||= Array.new
+      sinfo[title][section] ||= Hash.new
+      sinfo[title][section][code] = info
     end
-    @sinfo
+    sinfo
   end
 
   #  Grab information from messages
   def messages
-    @messages = Array.new
+    messages = []
     parse(MSG_REGEX) do |info|
-      @messages << info.first
+      messages << info.first
     end
-    @messages
+    messages
   end
 
   #  Grab information from discs
   def drives
-    @drives = Array.new
+    drives = []
     parse(DRIVES_REGEX) do |accessible, drive_name, disc_name, location|
-      drive = { accessible: accessible(accessible),
-                drive_name: drive_name,
-                disc_name: disc_name,
-                location: location }
-      @drives << drive
+      drives << {
+        accessible: accessible(accessible),
+        drive_name: drive_name,
+        disc_name: disc_name,
+        location: location
+      }
     end
-    @drives
+    drives
   end
 
   private
