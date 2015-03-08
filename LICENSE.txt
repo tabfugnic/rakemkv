@@ -1,4 +1,4 @@
-Copyright (c) 2013 Eric Collins
+Copyright (c) 2013-2015 Eric Collins
 
 MIT License
 

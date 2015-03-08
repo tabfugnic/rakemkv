@@ -1,8 +1,4 @@
 module RakeMKV
-  def self.transcode
-    Disc.new.transcode!
-  end
-
   def self.config
     Configuration.instance
   end

@@ -25,8 +25,22 @@ Or install it yourself as:
 
 ## Usage
 
-disc = RakeMKV::Disc.new("location/to/disc")
+```
+disc = RakeMKV::Disc.new('location/to/disc')
 disc.transcode!
+```
+
+## Configuration
+
+You can configure RakeMKV by doing the following:
+
+```ruby
+RakeMKV.configure do |config|
+  config.binary = 'new_makemkv_binary'
+  config.destination = 'new/destination/path'
+  config.minimum_title_length = 120 # Number in seconds
+end
+```
 
 ## Contributing
 
