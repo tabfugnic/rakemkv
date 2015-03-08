@@ -1,6 +1,6 @@
 module RakeMKV
-  def self.transcode(path)
-    Disc.new(path).transcode!
+  def self.transcode
+    Disc.new.transcode!
   end
 
   def self.config

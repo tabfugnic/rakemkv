@@ -28,8 +28,8 @@ class RakeMKV::Disc
   end
 
   #  Transcode information on disc
-  def transcode!(destination = '.', options = {})
-    check_directory!(destination)
+  def transcode!(options = {})
+    destination = options[:destination] || RakeMKV.config.destination
     title_id = options[:title_id] || titles.longest.id
     command.mkv(title_id, destination)
   end

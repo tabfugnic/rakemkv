@@ -22,7 +22,6 @@ describe RakeMKV::Command do
   end
 
   describe '#mkv' do
-    subject(:command) { RakeMKV::Command.new('disc:0') }
     it 'takes title and destination' do
       command = RakeMKV::Command.new('disc:0')
       allow(Cocaine::CommandLine).to receive(:new)

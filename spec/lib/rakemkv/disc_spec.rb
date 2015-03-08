@@ -31,16 +31,11 @@ describe RakeMKV::Disc do
       File.stub(:directory?).and_return true
     end
 
-    it 'errors when destination does not exist' do
-      File.stub(:directory?).and_return false
-      expect { disc.transcode!('/path/to/heart/') }.to raise_error
-    end
-
     it 'converts only a specific title' do
       expect_any_instance_of(RakeMKV::Command).to receive(:mkv)
-        .with(1, '/path/to/heart/')
+        .with(1, Dir.pwd)
 
-      disc.transcode!('/path/to/heart/', title_id: 1)
+      disc.transcode!(title_id: 1)
     end
   end
 
