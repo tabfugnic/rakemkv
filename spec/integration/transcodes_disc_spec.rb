@@ -11,7 +11,7 @@ describe 'transcoding disc' do
 
       RakeMKV::Disc.new(movie_path).transcode!
 
-      expect(Dir.entries(directory)).to include('title00.mkv')
+      expect(Dir.entries(directory)).to include("dvdvideo.mkv")
     end
   end
 end

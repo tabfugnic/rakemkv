@@ -29,9 +29,10 @@ class RakeMKV::Disc
 
   #  Transcode information on disc
   def transcode!(options = {})
-    destination = options[:destination] || RakeMKV.config.destination
-    title_id = options[:title_id] || titles.longest.id
+    destination = options.fetch(:destination, RakeMKV.config.destination)
+    title_id = options.fetch(:title_id, titles.longest.id)
     command.mkv(title_id, destination)
+    RakeMKV::Video.new(path: "#{destination}/title%02d.mkv" % title_id)
   end
 
   # Get titles for disc

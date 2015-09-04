@@ -37,6 +37,17 @@ describe RakeMKV::Disc do
 
       disc.transcode!(title_id: 1)
     end
+
+    it "converts title into video" do
+      allow_any_instance_of(RakeMKV::Command).
+        to receive(:mkv).
+        with(1, Dir.pwd)
+
+      result = disc.transcode!(title_id: 1)
+
+      expect(result).to be_a RakeMKV::Video
+      expect(result.path).to eq "#{Dir.pwd}/title01.mkv"
+    end
   end
 
   describe '#name' do
