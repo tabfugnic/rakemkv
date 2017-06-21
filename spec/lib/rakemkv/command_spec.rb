@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe RakeMKV::Command do
   describe '.installed?' do
-
     it 'verifies makemkv is installed' do
       allow(Cocaine::CommandLine).to receive(:new)
         .with('which', 'makemkvcon')

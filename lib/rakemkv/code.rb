@@ -40,8 +40,8 @@ class RakeMKV::Code
     :seamless_info,
     :panel_text,
     :mkv_flags,
-    :mkv_flags_text
-  ]
+    :mkv_flags_text,
+  ].freeze
 
   attr_reader :index
 
