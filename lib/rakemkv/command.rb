@@ -7,7 +7,7 @@ class RakeMKV::Command
 
   #  Check if mkv is installed
   def self.installed?
-    !Cocaine::CommandLine.new('which', RakeMKV.config.binary).run.empty?
+    !Terrapin::CommandLine.new('which', RakeMKV.config.binary).run.empty?
   end
 
   #  Call info command on disc
@@ -23,7 +23,7 @@ class RakeMKV::Command
   private
 
   def execute(command)
-    Cocaine::CommandLine.new(
+    Terrapin::CommandLine.new(
       "#{RakeMKV.config.binary} -r", full_command(command)
     ).run
   end

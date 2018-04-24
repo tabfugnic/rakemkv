@@ -8,7 +8,7 @@ module RakeMKV
   end
 end
 
-require "cocaine"
+require "terrapin"
 require "singleton"
 require "rakemkv/code"
 require "rakemkv/command"
