@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    working_directory: "~/rakemkv"
+    docker:
+      - image: tabfugnic/debian-makemkv
+    steps:
+      - checkout
+      - run:
+          name: Setup
+          command: |
+            gem install bundler
+            bundle install
+      - run:
+          name: Run tests
+          command: bundle exec rspec
