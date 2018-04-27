@@ -1,0 +1,105 @@
+#!/bin/sh
+
+main() {
+  final_disc_title=$1
+  number_of_titles=${2:-2}
+  length_range=${3:-5}
+
+  current_directory=$(pwd)
+  tmp_directory=$(mktemp -d)
+
+  echo "Building fake disc '$final_disc_title' with $number_of_titles titles no longer than $length_range seconds each"
+
+  cd $tmp_directory
+  echo "Setup Environment"
+  generate_dvdstructure $number_of_titles
+
+  echo "Creating Blank Video"
+  for i in `seq 1 $number_of_titles`; do
+    create_blank_mpeg $i $((RANDOM % length_range + 1))
+  done
+
+  echo "Building DVD from Files"
+  create_dvd_from_files
+
+  echo "Transform into ISO"
+  build_iso_from_movie ${final_disc_title} "test.iso"
+
+  cp test.iso $current_directory/
+  rm -rf $tmp_directory
+}
+
+
+create_blank_mpeg() {
+  name=$1
+  length=$2
+
+  ffmpeg \
+    -loglevel panic \
+    -t $length \
+    -s 720x480 \
+    -f rawvideo \
+    -pix_fmt monow \
+    -r 25 \
+    -i /dev/zero \
+    -y \
+    -target ntsc-dvd \
+    -g 18 \
+    -aspect 16:9 \
+    -mbd rd \
+    -trellis 2 \
+    -cmp 2 \
+    -subcmp 2 \
+    $name.mpg
+}
+
+create_dvd_from_files() {
+  dvdauthor -o movie -x dvdstructure.xml >/dev/null 2>&1
+}
+
+generate_dvdstructure() {
+  number_of_titles=$1
+
+  for i in `seq 1 $number_of_titles`; do
+    pgc_content=$(generate_pgc_content ${i}.mpg)
+  done
+
+  cat <<EOF > dvdstructure.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<dvdauthor>
+  <vmgm>
+    <menus>
+      <video format="ntsc" aspect="16:9" resolution="720xfull"/>
+      <pgc entry="title">
+        <pre>g2 = 0; jump title 1;</pre>
+      </pgc>
+    </menus>
+  </vmgm>
+  <titleset>
+    <titles>
+      <video format="ntsc" aspect="16:9" widescreen="nopanscan"/>
+      ${pgc_content}
+    </titles>
+  </titleset>
+</dvdauthor>
+EOF
+}
+
+build_iso_from_movie() {
+  final_title=$1
+  output=$2
+
+  genisoimage -dvd-video -V $final_title -o $output $(pwd)/movie >/dev/null 2>&1
+}
+
+generate_pgc_content() {
+  filename=$1
+
+  cat <<EOF
+<pgc pause="10">
+  <vob file="./${filename}" />
+</pgc>
+EOF
+}
+
+main $1 $2 $3
