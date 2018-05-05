@@ -47,7 +47,7 @@ class RakeMKV::Disc
   private
 
   def command
-    RakeMKV::Command.new(path)
+    RakeMKV::Command.new(path: path)
   end
 
   def build_titles

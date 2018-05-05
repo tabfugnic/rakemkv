@@ -1,32 +1,37 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe RakeMKV::Command do
-  describe '.installed?' do
-    it 'verifies makemkv is installed' do
-      allow(Terrapin::CommandLine).to receive(:new)
-        .with('which', 'makemkvcon')
-        .and_return(double('command', run: '/something/great'))
-      expect(RakeMKV::Command).to be_installed
+  describe "#info" do
+    it "gets the info for the object" do
+      command_line = double("terrapin", run: "info")
+      command_line_class = double(:command_line_class, new: command_line)
+
+      command = described_class.new(
+        path: "disc:0",
+        command_line_class: command_line_class,
+      )
+
+      expect(command.info).to eq "info"
+      expect(command_line_class).to have_received(:new)
+        .with("makemkvcon -r", "info disc:0")
     end
   end
 
-  describe '#info' do
-    it 'gets the info for the object' do
-      command = RakeMKV::Command.new('disc:0')
-      allow(Terrapin::CommandLine).to receive(:new)
-        .with('makemkvcon -r', 'info disc:0')
-        .and_return(double('terrapin', run: 'info'))
-      expect(command.info).to eq 'info'
-    end
-  end
+  describe "#mkv" do
+    it "takes title and destination" do
+      command_line = double("terrapin", run: "mkv")
+      command_line_class = double(:command_line_class, new: command_line)
 
-  describe '#mkv' do
-    it 'takes title and destination' do
-      command = RakeMKV::Command.new('disc:0')
-      allow(Terrapin::CommandLine).to receive(:new)
-        .with('makemkvcon -r', 'mkv disc:0 5 /path/to/heart')
-        .and_return(double('terrapin', run: 'mkv'))
-      expect(command.mkv(5,'/path/to/heart')).to eq 'mkv'
+      command = described_class.new(
+        path: "disc:0",
+        command_line_class: command_line_class,
+      )
+
+      expect(
+        command.mkv(5, "/path/to/heart"),
+      ).to eq "mkv"
+      expect(command_line_class).to have_received(:new)
+        .with("makemkvcon -r", "mkv disc:0 5 /path/to/heart")
     end
   end
 end

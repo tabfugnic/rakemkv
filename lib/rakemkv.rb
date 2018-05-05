@@ -10,6 +10,7 @@ end
 
 require "terrapin"
 require "singleton"
+require "rakemkv/binary"
 require "rakemkv/code"
 require "rakemkv/command"
 require "rakemkv/command_builder"
