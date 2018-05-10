@@ -32,7 +32,8 @@ describe RakeMKV::Disc do
     it "converts only a specific title" do
       disc = RakeMKV::Disc.new('disc:0')
       allow(File).to receive(:directory?).and_return true
-      expect_any_instance_of(RakeMKV::Command).to receive(:mkv).with(1, Dir.pwd)
+      expect_any_instance_of(RakeMKV::Command).
+        to receive(:mkv).with(1, Dir.pwd, {})
 
       disc.transcode!(title_id: 1)
     end

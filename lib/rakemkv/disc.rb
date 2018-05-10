@@ -3,8 +3,9 @@ class RakeMKV::Disc
   attr_reader :location
 
   #  Initialize disc
-  def initialize(location)
+  def initialize(location, minlength: RakeMKV.config.minimum_title_length)
     @location = location
+    @minlength = minlength
   end
 
   # Get path from location
@@ -24,14 +25,14 @@ class RakeMKV::Disc
 
   # parse file info from command
   def info
-    @info ||= RakeMKV::Parser.new(command.info)
+    @info ||= RakeMKV::Parser.new command.info(arguments)
   end
 
   #  Transcode information on disc
   def transcode!(options = {})
-    destination = options[:destination] || RakeMKV.config.destination
-    title_id = options[:title_id] || titles.longest.id
-    command.mkv(title_id, destination)
+    destination = options.fetch(:destination, RakeMKV.config.destination)
+    title_id = options.fetch(:title_id, titles.longest.id)
+    command.mkv(title_id, destination, arguments)
   end
 
   # Get titles for disc
@@ -45,6 +46,8 @@ class RakeMKV::Disc
   end
 
   private
+
+  attr_reader :minlength
 
   def command
     RakeMKV::Command.new(path: path)
@@ -60,5 +63,9 @@ class RakeMKV::Disc
     unless File.directory? destination
       raise StandardError
     end
+  end
+
+  def arguments
+    { minlength: minlength }.compact
   end
 end

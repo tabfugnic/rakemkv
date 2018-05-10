@@ -9,13 +9,13 @@ class RakeMKV::Command
   #  Call info command on disc
   def info(options = {})
     arguments = build_arguments(options)
-    @info ||= execute "info #{path} #{arguments}"
+    @info ||= execute("info #{path}", arguments)
   end
 
   #  Call mkv command on disc
   def mkv(title_id, destination, options = {})
     arguments = build_arguments(options)
-    @mkv ||= execute "mkv #{path} #{title_id} #{destination} #{arguments}"
+    @mkv ||= execute("mkv #{path} #{title_id} #{destination}", arguments)
   end
 
   private
@@ -28,14 +28,12 @@ class RakeMKV::Command
     end.join(" ")
   end
 
-
-  def execute(command)
-    command_line_class.new(
-      "#{RakeMKV.config.binary} -r", full_command(command)
-    ).run
+  def execute(command, arguments)
+    full_command = [command, arguments].reject(&:empty?).join(" ")
+    command_line_class.new(binary, full_command).run
   end
 
-  def full_command(command)
-    RakeMKV::CommandBuilder.new(command).build
+  def binary
+    "#{RakeMKV.config.binary} -r"
   end
 end
