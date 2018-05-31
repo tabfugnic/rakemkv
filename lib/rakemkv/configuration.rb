@@ -8,13 +8,8 @@ class RakeMKV::Configuration
     @binary || 'makemkvcon'
   end
 
-  def destination
-    @destination || Dir.pwd
-  end
-
   def reset!
     self.binary = nil
-    self.destination = nil
     self.minimum_title_length = nil
   end
 end

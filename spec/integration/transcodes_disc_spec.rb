@@ -6,10 +6,11 @@ describe "transcoding disc" do
     movie_path = File.expand_path(movie.path)
 
     Dir.mktmpdir do |directory|
-      RakeMKV.config.minimum_title_length = 0
-      RakeMKV.config.destination = directory
-
-      RakeMKV::Disc.new(movie_path).transcode!
+      RakeMKV::Disc.new(
+        destination: directory,
+        location: movie_path,
+        minlength: 0,
+      ).transcode!
 
       expect(Dir.entries(directory)).to include("DVDVIDEO")
       expect(Dir.entries("#{directory}/DVDVIDEO")).to include("title00.mkv")
