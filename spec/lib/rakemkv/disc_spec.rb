@@ -30,12 +30,14 @@ describe RakeMKV::Disc do
 
   describe "#transcode!" do
     it "converts only a specific title" do
-      disc = RakeMKV::Disc.new('disc:0')
-      allow(File).to receive(:directory?).and_return true
-      expect_any_instance_of(RakeMKV::Command).
-        to receive(:mkv).with(1, Dir.pwd, {})
+      Dir.mktmpdir do |path|
+        disc = RakeMKV::Disc.new('disc:0')
+        allow(File).to receive(:directory?).and_return true
+        expect_any_instance_of(RakeMKV::Command).
+          to receive(:mkv).with(1, "#{path}/DIME_NTSC", {})
 
-      disc.transcode!(title_id: 1)
+        disc.transcode!(title_id: 1, destination: path)
+      end
     end
   end
 
