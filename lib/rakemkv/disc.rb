@@ -2,11 +2,13 @@
 class RakeMKV::Disc
   attr_reader :location
 
+  DEFAULT_MINLENGTH = 120
+
   #  Initialize disc
   def initialize(
     location:,
     destination: Dir.pwd,
-    minlength: RakeMKV.config.minimum_title_length
+    minlength: DEFAULT_MINLENGTH
   )
     @location = location
     @destination = destination
@@ -35,7 +37,7 @@ class RakeMKV::Disc
 
   #  Transcode information on disc
   def transcode!(title_id: titles.longest.id)
-    Dir.mkdir(destination_with_name)
+    check_and_create_destination
     command.mkv(title_id, destination_with_name, arguments)
   end
 
@@ -59,6 +61,12 @@ class RakeMKV::Disc
 
   def destination_with_name
     File.join(destination, name)
+  end
+
+  def check_and_create_destination
+    if !Dir.exists?(destination_with_name)
+      Dir.mkdir(destination_with_name)
+    end
   end
 
   def build_titles

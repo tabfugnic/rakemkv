@@ -5,11 +5,10 @@ class RakeMKV::Configuration
   attr_writer :binary, :destination
 
   def binary
-    @binary || 'makemkvcon'
+    @binary || "makemkvcon"
   end
 
   def reset!
     self.binary = nil
-    self.minimum_title_length = nil
   end
 end
