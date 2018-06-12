@@ -36,7 +36,7 @@ describe RakeMKV::Disc do
         disc = RakeMKV::Disc.new(location: "disc:0", destination: path)
         allow(File).to receive(:directory?).and_return true
         expect_any_instance_of(RakeMKV::Command).
-          to receive(:mkv).with(1, "#{path}/DIME_NTSC", {})
+          to receive(:mkv).with(1, "#{path}/DIME_NTSC", { minlength: 120 })
 
         disc.transcode!(title_id: 1)
       end
