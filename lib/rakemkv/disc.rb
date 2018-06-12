@@ -51,16 +51,16 @@ class RakeMKV::Disc
     info.cinfo[method.to_sym] || super
   end
 
+  def destination_with_name
+    File.join(destination, name)
+  end
+
   private
 
   attr_reader :minlength, :destination
 
   def command
     RakeMKV::Command.new(path: path)
-  end
-
-  def destination_with_name
-    File.join(destination, name)
   end
 
   def check_and_create_destination
