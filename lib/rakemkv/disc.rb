@@ -8,11 +8,13 @@ class RakeMKV::Disc
   def initialize(
     location:,
     destination: Dir.pwd,
-    minlength: DEFAULT_MINLENGTH
+    minlength: DEFAULT_MINLENGTH,
+    parser_class: RakeMKV::Parser
   )
     @location = location
     @destination = destination
     @minlength = minlength
+    @parser_class = parser_class
   end
 
   # Get path from location
@@ -32,13 +34,17 @@ class RakeMKV::Disc
 
   # parse file info from command
   def info
-    @info ||= RakeMKV::Parser.new command.info(arguments)
+    @info ||= parser_class.new command.info(arguments)
   end
 
   #  Transcode information on disc
   def transcode!(title_id: titles.longest.id)
     check_and_create_destination
     command.mkv(title_id, destination_with_name, arguments)
+  end
+
+  def name
+   info.cinfo[:name].gsub("/", "_")
   end
 
   # Get titles for disc
@@ -57,7 +63,7 @@ class RakeMKV::Disc
 
   private
 
-  attr_reader :minlength, :destination
+  attr_reader :minlength, :destination, :parser_class
 
   def command
     RakeMKV::Command.new(path: path)

@@ -49,6 +49,15 @@ describe RakeMKV::Disc do
 
       expect(disc.name).to eq "DIME_NTSC"
     end
+
+    it "fixes the name with bad characters" do
+      parsed = double("parsed", cinfo: { name: "thing/stuff" })
+      parser_class = double("parser_class", new: parsed)
+
+      disc = RakeMKV::Disc.new(location: "disc:0", parser_class: parser_class)
+
+      expect(disc.name).to eq "thing_stuff"
+    end
   end
 
   describe '#titles' do
