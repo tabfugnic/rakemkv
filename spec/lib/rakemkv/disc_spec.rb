@@ -43,20 +43,20 @@ describe RakeMKV::Disc do
     end
   end
 
-  describe "#name" do
+  describe "#filesafe_name" do
     it "grabs the name of the disc" do
       disc = RakeMKV::Disc.new(location: "disc:0")
 
-      expect(disc.name).to eq "DIME_NTSC"
+      expect(disc.filesafe_name).to eq "dime_ntsc"
     end
 
     it "fixes the name with bad characters" do
-      parsed = double("parsed", cinfo: { name: "thing/stuff" })
+      parsed = double("parsed", cinfo: { name: "Foo/Bar bAz" })
       parser_class = double("parser_class", new: parsed)
 
       disc = RakeMKV::Disc.new(location: "disc:0", parser_class: parser_class)
 
-      expect(disc.name).to eq "thing_stuff"
+      expect(disc.filesafe_name).to eq "foo_bar_baz"
     end
   end
 

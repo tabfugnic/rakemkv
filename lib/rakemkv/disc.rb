@@ -43,8 +43,8 @@ class RakeMKV::Disc
     command.mkv(title_id, destination_with_name, arguments)
   end
 
-  def name
-   info.cinfo[:name].gsub("/", "_")
+  def filesafe_name
+   info.cinfo[:name].downcase.gsub(/[\/ ]/ , "_")
   end
 
   # Get titles for disc
@@ -58,7 +58,7 @@ class RakeMKV::Disc
   end
 
   def destination_with_name
-    File.join(destination, name)
+    File.join(destination, filesafe_name)
   end
 
   private
